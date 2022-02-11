@@ -1,8 +1,12 @@
 package com.stackspace.test.dummy;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -30,6 +34,21 @@ public class DummyTest {
 		bookService.addBook(new Book(UUID.randomUUID().toString(), "JUnit In Action", 290, "574514561", "John Doe",
 				LocalDate.now()));
 
+		assertEquals(2, bookService.numberOfAvailableBooks());
+	}
+
+	@Test
+	public void demoDummyWithMockito() {
+		BookRepository bookRepository = mock(BookRepository.class);
+		CourierService courierService = mock(CourierService.class);
+		BookService bookService = new BookService(bookRepository, courierService);
+
+		Book book1 = new Book(UUID.randomUUID().toString(), "Mockito In Action", 250, "654109175", "John Doe",
+				LocalDate.now());
+		Book book2 = new Book(UUID.randomUUID().toString(), "JUnit In Action", 290, "574514561", "John Doe",
+				LocalDate.now());
+		List<Book> bookList = Arrays.asList(book1, book2);
+		when(bookRepository.findAll()).thenReturn(bookList);
 		assertEquals(2, bookService.numberOfAvailableBooks());
 	}
 }
